@@ -2,9 +2,11 @@ import json
 import re
 import urllib
 
-#TODO: Remove
 from app.logging import get_logger
+
+# TODO: Remove
 logger = get_logger(__name__)
+
 
 class HostWrapper:
     def __init__(self, data=None):
@@ -147,18 +149,14 @@ class HostWrapper:
         return cls(json.loads(d))
 
 
-'''
+"""
 Tagging: functions for converting tags between valid representations
-'''
+"""
 
 
 class Tag:
     def __init__(self, namespace=None, key=None, value=None):
-        self.__data = {
-            "namespace": namespace,
-            "key": key,
-            "value": value
-        }
+        self.__data = {"namespace": namespace, "key": key, "value": value}
 
     def data(self):
         return self.__data
@@ -192,11 +190,11 @@ class Tag:
         key = None
         value = None
 
-        if(re.match(r"\w+\/\w+=\w+", string_tag)):  # NS/key=value
+        if re.match(r"\w+\/\w+=\w+", string_tag):  # NS/key=value
             namespace, key, value = re.split(r"/|=", string_tag)
-        elif(re.match(r"\w+\/\w+", string_tag)):  # NS/key
+        elif re.match(r"\w+\/\w+", string_tag):  # NS/key
             namespace, key = re.split(r"/", string_tag)
-        elif(re.match(r"\w+=\w+", string_tag)):  # key=value
+        elif re.match(r"\w+=\w+", string_tag):  # key=value
             key, value = re.split(r"=", string_tag)
         else:  # key
             key = string_tag
@@ -204,13 +202,7 @@ class Tag:
         return (namespace, key, value)
 
     def _create_nested(self, namespace, key, value):
-        return {
-            namespace: {
-                key: [
-                    value
-                ]
-            }
-        }
+        return {namespace: {key: [value]}}
 
     def from_string(self, string_tag):
         namespace, key, value = self._split_string_tag(string_tag)
@@ -261,20 +253,14 @@ class Tag:
         return f"{namespace_string}{key_string}{value_string}"
 
     def to_nested(self):
-        return {
-            self.namespace: {
-                self.key: [
-                    self.value
-                ]
-            }
-        }
+        return {self.namespace: {self.key: [self.value]}}
 
     @staticmethod
     def create_nested_from_tags(tags):
-        '''
+        """
         accepts an array of structured tags and makes a combined nested version
         of the tags
-        '''
+        """
         nested_tags = {}
 
         for tag in tags:
